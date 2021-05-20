@@ -4,6 +4,7 @@ var banana ,bananaImage, obstacle, obstacleImage;
 var FoodGroup, obstacleGroup;
 var score = 0;
 var ground;
+var forest_img,forest,forest2;
 //var survivalTime=0;
 var gameState="play";
 
@@ -11,20 +12,27 @@ function preload(){
   
   
         //preloads for animation and images
-        monkey_running =          loadAnimation("sprite_0.png","sprite_1.png","sprite_2.png","sprite_3.png","sprite_4.png","sprite_5.png","sprite_6.png","sprite_7.png","sprite_8.png")
+        monkey_running =loadAnimation("sprite_0.png","sprite_1.png","sprite_2.png","sprite_3.png","sprite_4.png","sprite_5.png","sprite_6.png","sprite_7.png","sprite_8.png")
 
         bananaImage = loadImage("banana.png");
         obstaceImage = loadImage("obstacle.png");
         collided = loadAnimation("sprite_3.png");
+        forest_img = loadImage("forest.png");
 }
 
 
 
 function setup() {
         createCanvas(displayWidth,displayHeight);
-        
         //created sprites
         ground=createSprite(displayWidth/2,displayHeight-50,displayWidth*100000000,5);
+
+        forest=createSprite(displayWidth/2,displayHeight/2,displayWidth,displayHeight);
+        forest2=createSprite(1700,displayHeight/2,displayWidth,displayHeight);
+        forest.addImage("forest",forest_img);
+        forest2.addImage("forest",forest_img);
+        forest.scale=4;
+        forest2.scale=4;
         monkey=createSprite(displayWidth/2,displayHeight-60)
         //added animation to monkey and scaled it down
         monkey.addAnimation("running",monkey_running);
@@ -48,7 +56,8 @@ function draw() {
   if (gameState==="play"){
   
                 
-            background("white");
+           // background("green");
+          ground.shapecolour="green";
            //moving ground
            //ground.velocityX=-8
          
@@ -71,52 +80,62 @@ function draw() {
            FoodGroup.destroyEach();
           // survivalTime= survivalTime+2
          }
+         console.log(monkey.x)
+
     
          food();
          //obstacle();
          monkey.visible=true;
          
+         
   }  
   
-       /* if(obstacleGroup.isTouching(monkey)){
-          ground.velocityX = 0;
-          monkey.velocityY = 0;                                             obstacleGroup.setVelocityXEach(0);
-          FoodGroup.setVelocityXEach(0);                                     obstacleGroup.setLifetimeEach(-1);                                 FoodGroup.setLifetimeEach(-1);
-          gameState="end";
-          monkey.visible=false;
-          stroke("black");
+        if(monkey.x>2000){
+            gameState="end";
+            console.log("end")
+        }
+
+        if(gameState==="end"){
           textSize(30);
           fill("black");
           text("Game Over",400,200);
-        }*/
+          ground.velocityX = 0;
+          monkey.velocityY = 0;  
+          monkey.velocityX = 0;  
+          monkey.visible=false;                                        
+          FoodGroup.setVelocityXEach(0);    
+          FoodGroup.destroyEach();                                                               
+          FoodGroup.setLifetimeEach(-1);
+          gameState="end";
+
+
+
+        }
 
   
         //monkey collide with the ground
         monkey.collide(ground);
+        drawSprites();
 
-       drawSprites();
 }
 
 
 function food(){
 
-      if(frameCount%80 === 0){
-        //food sprite
-         var food1=createSprite(displayWidth,120,70,50)
-         //random y position
-         food1.y=Math.round(random(displayHeight/4,displayHeight/3+400))
-        //added image to monkey
+        food1=createSprite(camera.position.x+300,random(camera.position.y-200,camera.position.y-100),70,50);
+
          food1.addImage("food",bananaImage);
         //velocity to move the food
-         food1.velocityX=-9;
+         food1.velocityX=-4;
         //decreased the size of food
          food1.scale=0.11;
         //lifetime for the food to protect it from memory leak
          
         //added food to the food group
          FoodGroup.add(food1);
-         }
+         
 }
+
 
 /*function obstacle(){
  if(frameCount% 200 === 0){
