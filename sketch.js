@@ -121,7 +121,7 @@ function draw() {
 
 
 function food(){
-
+     if(frameCount%80===0){
         food1=createSprite(camera.position.x+300,random(camera.position.y-200,camera.position.y-100),70,50);
 
          food1.addImage("food",bananaImage);
@@ -133,6 +133,7 @@ function food(){
          
         //added food to the food group
          FoodGroup.add(food1);
+     }
          
 }
 
